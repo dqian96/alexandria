@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package server;
+
+option java_multiple_files = true;
+option java_package = "com.github.dqian96.alexandria.director.server";
+option java_outer_classname = "DirectorServerProto";
+
+service Director {
+    rpc AppendEntries(AppendEntriesRequest) returns (AppendEntriesReply) {} // also used as heartbeat and commit
+    rpc RequestVote(RequestVoteRequest) returns (RequestVoteReply) {}
+}
+
+message Entry {
+    string key = 1; 
+    string value = 2;
+}
+
+message AppendEntriesRequest {
+    string leaderId = 1;
+    uint64 commitIndex = 2;
+    uint64 term = 3;
+    repeated Entry entries = 4;
+    Entry lastEntry = 5;
+    uint64 lastIndex = 6;
+    uint64 lastTerm = 7;
+}
+
+message AppendEntriesReply {
+    bool success = 1;
+    uint64 term = 2;
+}
+
+message RequestVoteRequest {
+    string candidateId = 1; 
+    uint64 term = 2;
+    uint64 lastTerm = 3;
+    uint64 lastIndex = 4;
+}
+
+message RequestVoteReply {
+    bool voteGranted = 1;
+    uint64 term = 2;
+}
